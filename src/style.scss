@@ -1,0 +1,195 @@
+.container {
+  margin: 0 auto;
+  max-width: 800px;
+  box-sizing: border-box;
+  position: relative;
+  font-family: "微軟正黑體";
+
+  .change {
+    color: #0077b3;
+    font-size: 16px;
+    width: 100%;
+    height: 24px;
+    cursor: pointer;
+    text-align: right;
+  }
+
+  .sliderCover {
+    width: 100%;
+    margin: 0 auto;
+    height: 50px;
+    text-align: center;
+    background: #ede9dd;
+    .arrowL {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 8px 8px 8px 0;
+      border-color: transparent #ff0000 transparent transparent;
+      display: inline-block;
+      line-height: 50px;
+      cursor: pointer;
+    }
+    .arrowR {
+      display: inline-block;
+      line-height: 50px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 8px 0 8px 8px;
+      border-color: transparent transparent transparent #ff0000;
+      cursor: pointer;
+    }
+    ul {
+      margin: 0 auto;
+      padding: 0;
+      width: calc(100% - 40px);
+      display: inline-block;
+      li {
+        display: inline-block;
+        width: calc(100% / 3);
+        line-height: 50px;
+        cursor: pointer;
+      }
+    }
+  }
+  .weekCover {
+    width: 100%;
+    border: solid #ccc;
+    border-width: 1px 1px 0 1px;
+    box-sizing: border-box;
+    div {
+      display: inline-block;
+      width: calc(100% / 7);
+      height: 30px;
+      text-align: center;
+    }
+    &.listCover {
+      display: none;
+    }
+  }
+  .calenderCover {
+    font-size: 0;
+    .eachDate {
+      font-size: 12px;
+      width: calc(100% / 7);
+      display: inline-block;
+      height: 100px;
+      box-sizing: border-box;
+      padding-left: 0.5%;
+      padding-bottom: 1%;
+      border: 1px solid #ccc;
+      position: relative;
+      vertical-align: middle;
+
+      span {
+        &:nth-child(1) {
+          font-size: 20px;
+          color: #444444;
+        }
+        &:nth-child(2) {
+          display: none;
+        }
+        &:nth-child(3) {
+          padding: 0 3px;
+          width: 40px;
+          height: 20px;
+          color: #fff;
+          text-align: center;
+          line-height: 20px;
+          background-color: #fe8400;
+          position: absolute;
+          right: 0;
+        }
+        &:nth-child(4),
+        &:nth-child(5),
+        &:nth-child(6),
+        &:nth-child(7) {
+          display: block;
+        }
+        &:nth-child(7) {
+          color: #e10500;
+        }
+      }
+    }
+  }
+  .listCover {
+    .eachDate {
+      height: 65px;
+      width: 100%;
+      padding: 0 5px;
+      position: relative;
+      border: solid #ccc;
+      border-width: 0 1px 1px 1px;
+      box-sizing: border-box;
+      span {
+        &:nth-child(1) {
+          font-size: 20px;
+          color: #444444;
+          position: absolute;
+          left: 25px;
+          top: 5px;
+          //   order: 1;
+        }
+        &:nth-child(2) {
+          font-size: 20px;
+          color: #444444;
+          position: absolute;
+          bottom: 5px;
+          left: 10px;
+          //   order: 5;
+        }
+        &:nth-child(3) {
+          padding: 0 3px;
+          width: 40px;
+          height: 20px;
+          color: #fff;
+          text-align: center;
+          line-height: 20px;
+          background-color: #fe8400;
+          border-radius: 5px;
+          position: absolute;
+          left: 90px;
+          bottom: 5px;
+          //   order: 6;
+        }
+        &:nth-child(4) {
+          position: absolute;
+          right: 20px;
+          top: 5px;
+
+          //   order: 4;
+        }
+        &:nth-child(5) {
+          position: absolute;
+          left: 95px;
+          top: 5px;
+          //   order: 2;
+        }
+        &:nth-child(6) {
+          position: absolute;
+          left: 200px;
+          top: 5px;
+          //   order: 3;
+        }
+
+        &:nth-child(7) {
+          color: #e10500;
+          position: absolute;
+          bottom: 5px;
+          right: 20px;
+          //   order: 7;
+        }
+      }
+      &.gray {
+        display: none;
+      }
+    }
+  }
+  .currentMonth {
+    background: #fff;
+  }
+  .gray {
+    background: rgb(223, 222, 222);
+  }
+}
