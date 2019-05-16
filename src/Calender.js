@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./style.scss";
 import groupInfo from "./json/data1.json";
+import moment from "moment";
 
 export default class Calender extends Component {
   state = {
@@ -204,54 +205,7 @@ export default class Calender extends Component {
     let week = weekStr.getDay();
     return week;
   }
-  useJsonDateYear() {
-    const initDay = this.state.initYearMonth;
-    let groupInfoDate = groupInfo;
-    const dateList = groupInfoDate.map(function(groupItem) {
-      return groupItem["date"];
-    });
-    let yearMonArr = [];
 
-    for (let i = 0; i < dateList.length; i += 1) {
-      yearMonArr.push(dateList[i].replace(/\//g, "").substring(0, 6)); //YM
-    }
-    console.log(yearMonArr);
-    // return yearMonArr;
-
-    //filter
-    // let newYearMonArr = yearMonArr.filter((years, idx) => {
-    //   return (
-    //     yearMonArr
-    //       .map((item, idx) => {
-    //         return item;
-    //       })
-    //       .indexOf(years) !== idx //找出重複的值
-    //   );
-    // });
-
-    // newYearMonArr.map((item, idx) => {
-    //   if (item === initDay) {
-    //     console.log(item);
-    //     return item;
-    //   }
-    // });
-    let newYearMonArr = yearMonArr.filter((years, idx) => {
-      return years === initDay;
-    });
-  }
-  useJsonDateDay() {
-    let groupInfoDate = groupInfo;
-    const dateList = groupInfoDate.map(function(groupItem) {
-      return groupItem["date"];
-    });
-
-    let dayArr = [];
-    for (let i = 0; i < dateList.length; i += 1) {
-      dayArr.push(dateList[i].replace(/\//g, "").substring(4, 9)); //MD
-    }
-    console.log(dayArr);
-    return dayArr;
-  }
   render() {
     // console.log("groupInfo", groupInfo);
     let changeClass =
@@ -262,7 +216,7 @@ export default class Calender extends Component {
       this.state.changeClass === true ? "weekCover " : "weekCover listCover";
     let changeCover =
       this.state.changeClass === true ? "calenderCover " : "listCover";
-    let groupInfoDate = groupInfo;
+
     return (
       <div>
         <div className="container">
@@ -288,17 +242,41 @@ export default class Calender extends Component {
               let newDD = dd < 10 ? "0" + dd : dd;
               // console.log("newDD", newDD);
               let groupDetail;
+              let useDate = [];
+              let row = groupInfo.find((value, idx) => {
+                if (
+                  value.date ===
+                  moment(`${initDay}${newDD}`, "YYYYMMDD").format("YYYY/MM/DD")
+                ) {
+                  useDate.push(value);
+                  console.log(useDate);
+                  return value;
+                }
+              });
 
               if (newDD > 0 || newDD === Number) {
                 groupDetail = (
                   <React.Fragment>
-                    <span>{newDD > 0 ? newDD : ""}</span>
+                    <span>{newDD > 0 ? dd : ""}</span>
                     <span>{this.weekList[this.whichDay(initDay + newDD)]}</span>
-                    <span>成團</span>
-                    <span>報名</span>
-                    <span>可賣</span>
-                    <span>團位</span>
-                    <span>價錢</span>
+                    {/* <span>成團</span> */}
+                    <span
+                      className={
+                        row && row.guaranteed === true ? "removebg" : ""
+                      }
+                    >
+                      {row && row.guaranteed === true ? "成團" : ""}
+                    </span>
+                    <span
+                      className={
+                        row && row.status === "後補" ? "greenText" : ""
+                      }
+                    >
+                      {row && row.status}
+                    </span>
+                    <span>{row && "可賣：" + row.availableVancancy}</span>
+                    <span>{row && "團位：" + row.totalVacnacy}</span>
+                    <span>{row && "價錢：" + row.price.toLocaleString()}</span>
                   </React.Fragment>
                 );
               } else {
@@ -306,7 +284,9 @@ export default class Calender extends Component {
               }
               return (
                 <div
-                  className={`eachDate ${dd > 0 ? "" : "gray"}`}
+                  className={`eachDate ${dd > 0 ? "" : "gray "}${
+                    row ? "" : "diNo"
+                  }`}
                   key={"day" + idx}
                 >
                   {groupDetail}
