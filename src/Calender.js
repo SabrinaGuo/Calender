@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./style.scss";
-import groupInfo from "./json/data1.json";
 import moment from "moment";
 
 export default class Calender extends Component {
@@ -8,8 +7,10 @@ export default class Calender extends Component {
     changeClass: true,
     monthArray: [],
     nowShow: 1,
-    initYearMonth: "201705"
+    initYearMonth: this.props.initYearMonth111,
+    groupInfo: []
   };
+
   weekList = [
     "星期天",
     "星期一",
@@ -19,9 +20,9 @@ export default class Calender extends Component {
     "星期五",
     "星期六"
   ];
-
   //顯示星期
   weekShow = () => {
+    // console.log(this.props.dataSource);
     let weekArr = [];
     for (let i = 0; i < this.weekList.length; i += 1) {
       weekArr.push(this.weekList[i]);
@@ -37,10 +38,42 @@ export default class Calender extends Component {
     });
     // console.log(changeList);
   };
-  //月曆上的月份顯示
+
+  //renden後執行
   componentDidMount() {
+    if (typeof this.props.dataSource === "object") {
+      this.setState({
+        groupInfo: this.props.dataSource
+      });
+    } else if (typeof this.props.dataSource === "string") {
+      fetch(this.props.dataSource, {
+        //資料要放到public 因為create app 本身沒有可支援Json的後端
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => {
+          // console.log("??????????", res);
+          return res.json();
+        })
+        .then(result => {
+          // console.log("!!!!!!!!!!!!", result);
+          this.setState(
+            {
+              groupInfo: result
+            },
+            this.catchJson //為避免非同步 在setState後立刻執行
+          );
+          // console.log("..................", this.state.groupInfo);
+        })
+        .catch(error => console.error("Error:", error));
+    }
+  }
+  //從json中取出date 排序 以及去除重複月份
+  catchJson = () => {
     let { initYearMonth } = this.state;
-    let groupInfoDate = groupInfo;
+    let groupInfoDate = this.state.groupInfo;
     let mouthListArr = [];
 
     //從json中取出date
@@ -72,7 +105,7 @@ export default class Calender extends Component {
       monthArray,
       nowShow
     });
-  }
+  };
 
   //倒退
   monthPrev = () => {
@@ -162,7 +195,6 @@ export default class Calender extends Component {
   //click之後會得到initYearMonth更新state
   getNowMonth = item => {
     // console.log(item);
-    // let str = this.deleteLine(item);
     this.setState({
       initYearMonth: item
     });
@@ -207,7 +239,6 @@ export default class Calender extends Component {
   }
 
   render() {
-    // console.log("groupInfo", groupInfo);
     let changeClass =
       this.state.changeClass === true ? "fas fa-list " : "far fa-calendar-alt";
     let changeWord =
@@ -222,9 +253,7 @@ export default class Calender extends Component {
         <div className="container">
           <div className="change" onClick={this.changeList}>
             <i className={changeClass} />
-            {/* <i className="far fa-calendar-alt"></i> */}
             <span>{changeWord}</span>
-            {/* <span>切換月曆顯示</span> */}
           </div>
           <div className="sliderCover">
             <div className="arrowL" onClick={this.monthPrev} />
@@ -241,46 +270,54 @@ export default class Calender extends Component {
               const initDay = this.state.initYearMonth;
               let newDD = dd < 10 ? "0" + dd : dd;
               // console.log("newDD", newDD);
-              let groupDetail;
-              let useDate = [];
-              let row = groupInfo.find((value, idx) => {
+              let groupDetail = "";
+
+              let guaranteed = this.props.dataKeySetting.guaranteed;
+              let status = this.props.dataKeySetting.status;
+              let available = this.props.dataKeySetting.available;
+              let total = this.props.dataKeySetting.total;
+              let price = this.props.dataKeySetting.price;
+
+              // let useDate = [];
+
+              // let reverseJson = groupInfo.reverse();//資料翻轉
+              let row = this.state.groupInfo.find((value, idx) => {
                 if (
                   value.date ===
                   moment(`${initDay}${newDD}`, "YYYYMMDD").format("YYYY/MM/DD")
                 ) {
-                  useDate.push(value);
-                  console.log(useDate);
+                  // useDate.push(value);
+                  // console.log("useDate", useDate);
                   return value;
                 }
               });
-
               if (newDD > 0 || newDD === Number) {
-                groupDetail = (
-                  <React.Fragment>
-                    <span>{newDD > 0 ? dd : ""}</span>
-                    <span>{this.weekList[this.whichDay(initDay + newDD)]}</span>
-                    {/* <span>成團</span> */}
-                    <span
-                      className={
-                        row && row.guaranteed === true ? "removebg" : ""
-                      }
-                    >
-                      {row && row.guaranteed === true ? "成團" : ""}
-                    </span>
-                    <span
-                      className={
-                        row && row.status === "後補" ? "greenText" : ""
-                      }
-                    >
-                      {row && row.status}
-                    </span>
-                    <span>{row && "可賣：" + row.availableVancancy}</span>
-                    <span>{row && "團位：" + row.totalVacnacy}</span>
-                    <span>{row && "價錢：" + row.price.toLocaleString()}</span>
-                  </React.Fragment>
-                );
-              } else {
-                groupDetail = "";
+                console.log("!!!!!!!!!1", row);
+                if (typeof row !== "undefined") {
+                  console.log("????????", row[available]);
+                  groupDetail = (
+                    <React.Fragment>
+                      <span>{newDD > 0 ? dd : ""}</span>
+                      <span>
+                        {this.weekList[this.whichDay(initDay + newDD)]}
+                      </span>
+                      <span className={row[guaranteed] === true ? "addbg" : ""}>
+                        {console.log("row", row)}
+                        {console.log("props:available =>", available)}
+
+                        {row[guaranteed] === true ? "成團" : ""}
+                      </span>
+                      <span
+                        className={row[status] === "後補" ? "greenText" : ""}
+                      >
+                        {row[status]}
+                      </span>
+                      <span>{"可賣：" + row[available]}</span>
+                      <span>{"團位：" + row[total]}</span>
+                      <span>{"價錢：" + row[price].toLocaleString()}</span>
+                    </React.Fragment>
+                  );
+                }
               }
               return (
                 <div
@@ -293,6 +330,10 @@ export default class Calender extends Component {
                 </div>
               );
             })}
+          </div>
+          <div className={changeCover === "listCover" ? "pages" : "pagesNo"}>
+            <span>1</span>
+            <span>2</span>
           </div>
         </div>
       </div>

@@ -20,6 +20,9 @@
     height: 50px;
     text-align: center;
     background: #ede9dd;
+    border: solid #ccc;
+    border-width: 1px 1px 0 1px;
+    box-sizing: border-box;
     .arrowL {
       width: 0;
       height: 0;
@@ -56,12 +59,13 @@
   .weekCover {
     width: 100%;
     border: solid #ccc;
-    border-width: 1px 1px 0 1px;
+    border-width: 1px 1px 1px 1px;
     box-sizing: border-box;
     div {
       display: inline-block;
       width: calc(100% / 7);
       height: 30px;
+      line-height: 30px;
       text-align: center;
     }
     &.listCover {
@@ -70,6 +74,8 @@
   }
   .calenderCover {
     font-size: 0;
+    border: solid #ccc;
+    border-width: 0 0 0 1px;
     .eachDate {
       font-size: 12px;
       width: calc(100% / 7);
@@ -78,7 +84,8 @@
       box-sizing: border-box;
       padding-left: 0.5%;
       padding-bottom: 1%;
-      border: 1px solid #ccc;
+      border: solid #ccc;
+      border-width: 0 1px 1px 0;
       position: relative;
       vertical-align: middle;
       &:hover {
@@ -119,7 +126,7 @@
         &.greenText {
           color: #1c9c9d;
         }
-        &.removebg {
+        &.addbg {
           background: #fe8400;
         }
       }
@@ -129,6 +136,8 @@
     }
   }
   .listCover {
+    // height: 520px;
+    // overflow: hidden;
     .eachDate {
       height: 65px;
       width: 100%;
@@ -203,7 +212,7 @@
           right: 20px;
           //   order: 7;
         }
-        &.removebg {
+        &.addbg {
           background: #fe8400;
         }
       }
@@ -217,5 +226,21 @@
   }
   .currentMonth {
     background: #fff;
+  }
+  .pages {
+    display: none;
+    // width: 100%;
+    // margin: 0 auto;
+    // text-align: center;
+    // height: 30px;
+    // vertical-align: middle;
+    // span {
+    //   padding: 1%;
+    //   display: inline-block;
+    //   cursor: pointer;
+    // }
+  }
+  .pagesNo {
+    display: none;
   }
 }
