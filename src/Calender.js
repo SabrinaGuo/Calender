@@ -292,9 +292,9 @@ export default class Calender extends Component {
                 }
               });
               if (newDD > 0 || newDD === Number) {
-                console.log("!!!!!!!!!1", row);
+                // console.log("!!!!!!!!!1", row);
                 if (typeof row !== "undefined") {
-                  console.log("????????", row[available]);
+                  // console.log("????????", row[available]);
                   groupDetail = (
                     <React.Fragment>
                       <span>{newDD > 0 ? dd : ""}</span>
@@ -302,8 +302,8 @@ export default class Calender extends Component {
                         {this.weekList[this.whichDay(initDay + newDD)]}
                       </span>
                       <span className={row[guaranteed] === true ? "addbg" : ""}>
-                        {console.log("row", row)}
-                        {console.log("props:available =>", available)}
+                        {/* {console.log("row", row)} */}
+                        {/* {console.log("props:available =>", available)} */}
 
                         {row[guaranteed] === true ? "成團" : ""}
                       </span>
