@@ -96,9 +96,11 @@
         &:nth-child(1) {
           font-size: 20px;
           color: #444444;
+          pointer-events: none;
         }
         &:nth-child(2) {
           display: none;
+          pointer-events: none;
         }
         &:nth-child(3) {
           padding: 0 3px;
@@ -110,18 +112,22 @@
           // background-color: #fe8400;
           position: absolute;
           right: 0;
+          pointer-events: none;
         }
         &:nth-child(4) {
           color: #ff7800;
           display: block;
+          pointer-events: none;
         }
         &:nth-child(5),
         &:nth-child(6),
         &:nth-child(7) {
           display: block;
+          pointer-events: none;
         }
         &:nth-child(7) {
           color: #e10500;
+          pointer-events: none;
         }
         &.greenText {
           color: #1c9c9d;
@@ -157,6 +163,7 @@
           position: absolute;
           left: 25px;
           top: 5px;
+          pointer-events: none;
           //   order: 1;
         }
         &:nth-child(2) {
@@ -165,6 +172,7 @@
           position: absolute;
           bottom: 5px;
           left: 10px;
+          pointer-events: none;
           //   order: 5;
         }
         &:nth-child(3) {
@@ -179,6 +187,7 @@
           position: absolute;
           left: 90px;
           bottom: 5px;
+          pointer-events: none;
           //   order: 6;
         }
         &:nth-child(4) {
@@ -186,7 +195,7 @@
           right: 20px;
           top: 5px;
           color: #ff7800;
-
+          pointer-events: none;
           //   order: 4;
         }
         &.greenText {
@@ -196,12 +205,14 @@
           position: absolute;
           left: 95px;
           top: 5px;
+          pointer-events: none;
           //   order: 2;
         }
         &:nth-child(6) {
           position: absolute;
           left: 200px;
           top: 5px;
+          pointer-events: none;
           //   order: 3;
         }
 
@@ -210,6 +221,7 @@
           position: absolute;
           bottom: 5px;
           right: 20px;
+          pointer-events: none;
           //   order: 7;
         }
         &.addbg {
@@ -228,17 +240,20 @@
     background: #fff;
   }
   .pages {
-    display: none;
-    // width: 100%;
-    // margin: 0 auto;
-    // text-align: center;
-    // height: 30px;
-    // vertical-align: middle;
-    // span {
-    //   padding: 1%;
-    //   display: inline-block;
-    //   cursor: pointer;
-    // }
+    // display: none;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    height: 30px;
+    vertical-align: middle;
+    span {
+      padding: 1%;
+      display: inline-block;
+      cursor: pointer;
+    }
+    span:hover {
+      color: rgb(54, 161, 248);
+    }
   }
   .pagesNo {
     display: none;

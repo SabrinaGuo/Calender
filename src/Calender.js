@@ -8,9 +8,11 @@ export default class Calender extends Component {
     monthArray: [],
     nowShow: 1,
     initYearMonth: this.props.initYearMonth111,
-    groupInfo: []
+    groupInfo: [],
+    $btn: "",
+    dateData: []
   };
-
+  data = [];
   weekList = [
     "星期天",
     "星期一",
@@ -30,13 +32,14 @@ export default class Calender extends Component {
     return weekArr;
   };
   //月曆與列表狀態變更
-  changeList = () => {
+  switch = () => {
     let changeList = this.state.changeClass;
 
     this.setState({
       changeClass: !changeList
     });
     // console.log(changeList);
+    return "切換完成";
   };
 
   //renden後執行
@@ -55,10 +58,12 @@ export default class Calender extends Component {
       })
         .then(res => {
           // console.log("??????????", res);
+          //預備轉成Json檔
           return res.json();
         })
         .then(result => {
           // console.log("!!!!!!!!!!!!", result);
+          //轉好後丟上去
           this.setState(
             {
               groupInfo: result
@@ -106,10 +111,66 @@ export default class Calender extends Component {
       nowShow
     });
   };
+  consoleEverything(data) {
+    console.log(data, this);
+  }
+  // onClickPrev() {
+  //   const { $btn, data, module } = this.state;
+  //   console.log($btn, data, module);
+  // }
+  // onClickNext() {
+  //   const { $btn, data, module } = this.state;
+  //   console.log($btn, data, module);
+  // }
+  pprevMonth() {
+    let { initYearMonth, groupInfo } = this.state;
+
+    groupInfo.map(item => {
+      if (
+        item["date"].substring(0, 7) ===
+        moment(initYearMonth, "YYYYMM")
+          .add(-1, "M")
+          .format("YYYY/MM")
+      ) {
+        return this.data.push(item);
+      }
+      return false;
+    });
+  }
+  prevMonth() {
+    this.consoleEverything(this.data);
+  }
+  nnextMonth() {
+    let { initYearMonth, groupInfo } = this.state;
+
+    groupInfo.map(item => {
+      if (
+        item["date"].substring(0, 7) ===
+        moment(initYearMonth, "YYYYMM")
+          .add(1, "M")
+          .format("YYYY/MM")
+      ) {
+        // let a = moment(initYearMonth, "YYYYMM")
+        //   .add(1, "M")
+        //   .format("YYYY/MM");
+        // console.log(a);
+        return this.data.push(item);
+      }
+      return false;
+    });
+  }
+  nextMonth() {
+    this.consoleEverything(this.data);
+  }
 
   //倒退
-  monthPrev = () => {
+  monthPrev = e => {
     let { monthArray, nowShow, initYearMonth } = this.state;
+    console.log(e.target);
+    let $btn = e.target;
+    this.pprevMonth();
+    this.props.onClickPrev($btn, this.data, this);
+
     if (nowShow === 0) {
       nowShow = 0;
     } else {
@@ -118,21 +179,55 @@ export default class Calender extends Component {
     initYearMonth = monthArray[nowShow];
     this.setState({
       nowShow,
-      initYearMonth
+      initYearMonth,
+      $btn
     });
   };
+  //day
+  dayClick = e => {
+    let { initYearMonth, groupInfo, dateData } = this.state;
+    let $date = e.target;
+    let day = e.target.getAttribute("id");
+    // console.log($date);
+    dateData = [];
+    groupInfo.map(item => {
+      if (
+        item["date"] ===
+        moment(`${initYearMonth}${day}`, "YYYYMMDD").format("YYYY/MM/DD")
+      ) {
+        // let a = moment(`${initYearMonth}${day}`, "YYYYMMDD").format(
+        //   "YYYY/MM/DD"
+        // );
+        // console.log(item["date"]);
+        // console.log(a);
+        return dateData.push(item);
+      }
+      return false;
+    });
+    this.props.onClickDate($date, dateData);
+    this.setState({
+      dateData
+    });
+    // console.log(dateData);
+  };
   //前進
-  monthNext = () => {
+  monthNext = e => {
     let { monthArray, nowShow, initYearMonth } = this.state;
+    let $btn = e.target;
+    this.nnextMonth();
+    this.props.onClickNext($btn, this.data, this);
+
     if (nowShow >= monthArray.length - 1) {
       nowShow = monthArray.length - 1;
     } else {
       nowShow += 1;
     }
     initYearMonth = monthArray[nowShow];
+    // console.log($btn);
     this.setState({
       nowShow,
-      initYearMonth
+      initYearMonth,
+      $btn
     });
     // console.log(" monthArray.length", monthArray.length);
     // console.log("nowShow", nowShow);
@@ -186,12 +281,12 @@ export default class Calender extends Component {
     }
   }
   //將資料去除"/"
-  deleteLine(itemcome) {
-    if (typeof itemcome === "string") {
-      let str = itemcome.replace(/\//g, "");
-      return str;
-    }
-  }
+  // deleteLine(itemcome) {
+  //   if (typeof itemcome === "string") {
+  //     let str = itemcome.replace(/\//g, "");
+  //     return str;
+  //   }
+  // }
   //click之後會得到initYearMonth更新state
   getNowMonth = item => {
     // console.log(item);
@@ -203,9 +298,9 @@ export default class Calender extends Component {
   getDays() {
     // let groupInfoDate = groupInfo;
     // let provMonth =  groupInfoDate["date"]
-    const initDay = this.state.initYearMonth;
-    let yearStr = Number(initDay.substring(0, 4));
-    let monthStr = Number(initDay.substring(4, 6));
+    let { initYearMonth } = this.state;
+    let yearStr = Number(initYearMonth.substring(0, 4));
+    let monthStr = Number(initYearMonth.substring(4, 6));
     let daysCount = new Date(yearStr, monthStr, 0);
     let dayTotal = daysCount.getDate();
     let dayArr = [];
@@ -215,7 +310,7 @@ export default class Calender extends Component {
     // console.log(dayTotal); //31
 
     let reg = /^(\d{4})(\d{2})$/;
-    let str = initDay.replace(reg, "$1,$2,01");
+    let str = initYearMonth.replace(reg, "$1,$2,01");
     // console.log("str", str);
     // console.log("initDay", initDay);
     let weekStr = new Date(str);
@@ -238,6 +333,46 @@ export default class Calender extends Component {
     return week;
   }
 
+  //計算數量
+  countPages = () => {
+    let { initYearMonth, groupInfo } = this.state;
+    let countPage = [];
+
+    const dateList = groupInfo.map(function(groupItem) {
+      return groupItem["date"];
+    });
+    dateList.sort((a, b) => {
+      return a > b ? 1 : -1;
+    });
+    let repeat = dateList.filter((date, idx) => {
+      return (
+        dateList
+          .map((item, idx) => {
+            return item;
+          })
+          .indexOf(date) === idx
+      );
+    });
+    for (let i = 0; i < repeat.length; i += 1) {
+      countPage.push(repeat[i].substring(0, 7).replace("/", ""));
+    }
+    let total = [];
+    for (let i = 0; i < countPage.length; i += 1) {
+      if (countPage[i] === initYearMonth) {
+        total.push(countPage[i]);
+      }
+    }
+    let ppage = Math.floor(total.length / 8);
+    let pgArr = [];
+    for (let p = 0; p <= ppage; p += 1) {
+      pgArr.push(p);
+    }
+    // console.log(total.length);
+    return pgArr;
+  };
+
+  // moveT = () => {};
+
   render() {
     let changeClass =
       this.state.changeClass === true ? "fas fa-list " : "far fa-calendar-alt";
@@ -250,8 +385,8 @@ export default class Calender extends Component {
 
     return (
       <div>
-        <div className="container">
-          <div className="change" onClick={this.changeList}>
+        <div className="container calendars">
+          <div className="change" onClick={this.switch}>
             <i className={changeClass} />
             <span>{changeWord}</span>
           </div>
@@ -290,6 +425,7 @@ export default class Calender extends Component {
                   // console.log("useDate", useDate);
                   return value;
                 }
+                return false;
               });
               if (newDD > 0 || newDD === Number) {
                 // console.log("!!!!!!!!!1", row);
@@ -297,7 +433,7 @@ export default class Calender extends Component {
                   // console.log("????????", row[available]);
                   groupDetail = (
                     <React.Fragment>
-                      <span>{newDD > 0 ? dd : ""}</span>
+                      {/* <span>{newDD > 0 ? dd : ""}</span> */}
                       <span>
                         {this.weekList[this.whichDay(initDay + newDD)]}
                       </span>
@@ -325,16 +461,20 @@ export default class Calender extends Component {
                     row ? "" : "diNo"
                   }`}
                   key={"day" + idx}
+                  id={dd}
+                  onClick={e => this.dayClick(e)}
                 >
+                  <span>{dd > 0 ? dd : ""}</span>
                   {groupDetail}
                 </div>
               );
             })}
           </div>
-          <div className={changeCover === "listCover" ? "pages" : "pagesNo"}>
-            <span>1</span>
-            <span>2</span>
-          </div>
+          {/* <div className={changeCover === "listCover" ? "pages" : "pagesNo"}>
+            {this.countPages().map((pgs, idx) => {
+              return <span key={"page" + idx}>{pgs + 1}</span>;
+            })}
+          </div> */}
         </div>
       </div>
     );
