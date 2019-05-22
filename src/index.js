@@ -9,11 +9,11 @@ export default class App extends Component {
     super(props);
     this.child = React.createRef();
   }
-  prevMonth = () => {
-    return this.child.current.prevMonth();
+  prevMonth = callback => {
+    return this.child.current.prevMonth(callback);
   };
-  nextMonth = () => {
-    return this.child.current.nextMonth();
+  nextMonth = callback => {
+    return this.child.current.nextMonth(callback);
   };
   switch = () => {
     return this.child.current.switch();
@@ -40,17 +40,17 @@ export default class App extends Component {
       <div>
         <Calender
           ref={this.child}
-          dataSource="./json/data3.json"
+          dataSource="./json/data2.json"
           initYearMonth111="201612"
           dataKeySetting={{
-            guaranteed: "guaranteed", //可變
+            guaranteed: "certain", //可變
             //有沒有成團
             //如果false要刪掉
-            status: "status",
+            status: "state",
             //狀態
-            available: "availableVancancy",
+            available: "onsell",
             //可賣座位
-            total: "totalVacnacy",
+            total: "total",
             //團位
             price: "price"
           }}

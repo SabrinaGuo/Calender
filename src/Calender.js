@@ -128,8 +128,9 @@ export default class Calender extends Component {
     });
   }
   //clg
-  prevMonth() {
-    console.log(this.data);
+  prevMonth(callback) {
+    this.pprevMonth();
+    callback(this.data, window.calendar);
   }
   //運算下個月的data
   nnextMonth() {
@@ -148,8 +149,10 @@ export default class Calender extends Component {
     });
   }
   //clg
-  nextMonth() {
-    console.log(this.data);
+  nextMonth(callback) {
+    // console.log(this.data);
+    this.nnextMonth();
+    callback(this.data, window.calendar);
   }
 
   //倒退
