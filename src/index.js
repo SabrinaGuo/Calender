@@ -22,7 +22,7 @@ export default class App extends Component {
     let a = this.child.current.state.groupInfo;
 
     this.child.current.setState({
-      groupInfo: [...a, ...data]
+      groupInfo: [...data, ...a]
     });
   };
   resetData = data => {

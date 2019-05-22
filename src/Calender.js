@@ -77,12 +77,11 @@ export default class Calender extends Component {
   }
   //從json中取出date 排序 以及去除重複月份
   catchJson = () => {
-    let { initYearMonth } = this.state;
-    let groupInfoDate = this.state.groupInfo;
+    let { initYearMonth, groupInfo } = this.state;
     let mouthListArr = [];
 
     //從json中取出date
-    const dateList = groupInfoDate.map(function(groupItem) {
+    const dateList = groupInfo.map(function(groupItem) {
       return groupItem["date"];
     });
     //進行排序
@@ -90,7 +89,7 @@ export default class Calender extends Component {
       return a > b ? 1 : -1;
     });
     //為了符合initYearMonth將資料中的"/"以及日期去除
-    for (let i = 0; i < groupInfoDate.length; i += 1) {
+    for (let i = 0; i < groupInfo.length; i += 1) {
       mouthListArr.push(dateList[i].substring(0, 7).replace("/", ""));
     }
     //將重複的月份去除
@@ -111,20 +110,11 @@ export default class Calender extends Component {
       nowShow
     });
   };
-  consoleEverything(data) {
-    console.log(data, this);
-  }
-  // onClickPrev() {
-  //   const { $btn, data, module } = this.state;
-  //   console.log($btn, data, module);
-  // }
-  // onClickNext() {
-  //   const { $btn, data, module } = this.state;
-  //   console.log($btn, data, module);
-  // }
+
+  //運算上個月的data
   pprevMonth() {
     let { initYearMonth, groupInfo } = this.state;
-
+    this.data = [];
     groupInfo.map(item => {
       if (
         item["date"].substring(0, 7) ===
@@ -137,12 +127,14 @@ export default class Calender extends Component {
       return false;
     });
   }
+  //clg
   prevMonth() {
-    this.consoleEverything(this.data);
+    console.log(this.data);
   }
+  //運算下個月的data
   nnextMonth() {
     let { initYearMonth, groupInfo } = this.state;
-
+    this.data = [];
     groupInfo.map(item => {
       if (
         item["date"].substring(0, 7) ===
@@ -150,23 +142,20 @@ export default class Calender extends Component {
           .add(1, "M")
           .format("YYYY/MM")
       ) {
-        // let a = moment(initYearMonth, "YYYYMM")
-        //   .add(1, "M")
-        //   .format("YYYY/MM");
-        // console.log(a);
         return this.data.push(item);
       }
       return false;
     });
   }
+  //clg
   nextMonth() {
-    this.consoleEverything(this.data);
+    console.log(this.data);
   }
 
   //倒退
   monthPrev = e => {
     let { monthArray, nowShow, initYearMonth } = this.state;
-    console.log(e.target);
+    // console.log(e.target);
     let $btn = e.target;
     this.pprevMonth();
     this.props.onClickPrev($btn, this.data, this);
@@ -324,7 +313,7 @@ export default class Calender extends Component {
     // console.log("=====", dayArr); //1
     return dayArr;
   }
-
+  //組合init跟dd 得到星期
   whichDay(day) {
     let reg = /^(\d{4})(\d{2})(\d{1,2})$/;
     let str = day.replace(reg, "$1,$2,$3");
@@ -332,46 +321,6 @@ export default class Calender extends Component {
     let week = weekStr.getDay();
     return week;
   }
-
-  //計算數量
-  countPages = () => {
-    let { initYearMonth, groupInfo } = this.state;
-    let countPage = [];
-
-    const dateList = groupInfo.map(function(groupItem) {
-      return groupItem["date"];
-    });
-    dateList.sort((a, b) => {
-      return a > b ? 1 : -1;
-    });
-    let repeat = dateList.filter((date, idx) => {
-      return (
-        dateList
-          .map((item, idx) => {
-            return item;
-          })
-          .indexOf(date) === idx
-      );
-    });
-    for (let i = 0; i < repeat.length; i += 1) {
-      countPage.push(repeat[i].substring(0, 7).replace("/", ""));
-    }
-    let total = [];
-    for (let i = 0; i < countPage.length; i += 1) {
-      if (countPage[i] === initYearMonth) {
-        total.push(countPage[i]);
-      }
-    }
-    let ppage = Math.floor(total.length / 8);
-    let pgArr = [];
-    for (let p = 0; p <= ppage; p += 1) {
-      pgArr.push(p);
-    }
-    // console.log(total.length);
-    return pgArr;
-  };
-
-  // moveT = () => {};
 
   render() {
     let changeClass =
@@ -470,11 +419,6 @@ export default class Calender extends Component {
               );
             })}
           </div>
-          {/* <div className={changeCover === "listCover" ? "pages" : "pagesNo"}>
-            {this.countPages().map((pgs, idx) => {
-              return <span key={"page" + idx}>{pgs + 1}</span>;
-            })}
-          </div> */}
         </div>
       </div>
     );
